@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Fault Diagnosis AI</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px #aaa;
+        }
+        h2 {
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Device Fault Diagnosis AI</h2>
+        
+        <label for="voltage">Voltage (3.0 - 5.0):</label>
+        <input type="number" id="voltage" min="3.0" max="5.0" step="0.1">
+
+        <label for="current">Current (0.5 - 3.0):</label>
+        <input type="number" id="current" min="0.5" max="3.0" step="0.1">
+
+        <label for="temperature">Temperature (20 - 100°C):</label>
+        <input type="number" id="temperature" min="20" max="100" step="1">
+
+        <label for="errorCode">Error Code:</label>
+        <select id="errorCode">
+            <option value="E100">E100</option>
+            <option value="E101">E101</option>
+            <option value="E102">E102</option>
+            <option value="E103">E103</option>
+            <option value="E104">E104</option>
+        </select>
+
+        <button onclick="predictFault()">Predict Fault</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function predictFault() {
+            let voltage = document.getElementById("voltage").value;
+            let current = document.getElementById("current").value;
+            let temperature = document.getElementById("temperature").value;
+            let errorCode = document.getElementById("errorCode").value;
+
+            if (!voltage || !current || !temperature) {
+                document.getElementById("result").innerHTML = "Please fill in all fields.";
+                return;
+            }
+
+            let inputData = {
+                "Voltage": parseFloat(voltage),
+                "Current": parseFloat(current),
+                "Temperature": parseFloat(temperature),
+                "Error_Code": errorCode
+            };
+
+            fetch("https://raw.githubusercontent.com/your-username/ELECTRONICS/main/model_api.py", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(inputData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerHTML = "Predicted Fault: " + data.prediction;
+            })
+            .catch(error => {
+                document.getElementById("result").innerHTML = "Error fetching prediction.";
+                console.error("Error:", error);
+            });
+        }
+    </script>
+
+</body>
+</html>
